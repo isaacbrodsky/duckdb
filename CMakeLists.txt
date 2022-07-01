@@ -248,6 +248,7 @@ option(BUILD_JSON_EXTENSION "Build the JSON extension." FALSE)
 option(BUILD_EXCEL_EXTENSION "Build the excel extension." FALSE)
 option(BUILD_BENCHMARKS "Enable building of the benchmark suite." FALSE)
 option(BUILD_SQLSMITH_EXTENSION "Enable building of the SQLSmith extension." FALSE)
+option(BUILD_H3_EXTENSION "Enable building of the H3 extension." FALSE)
 option(BUILD_TPCE "Enable building of the TPC-E tool." FALSE)
 option(DISABLE_BUILTIN_EXTENSIONS "Disable linking extensions." FALSE)
 option(BUILD_SUBSTRAIT_EXTENSION "Enable building of Substrait Extension." FALSE)
@@ -300,8 +301,8 @@ if(BUILD_PYTHON)
   set(BUILD_EXCEL_EXTENSION TRUE)
 endif()
 
-if(BUILD_SQLSMITH)
-  set(BUILD_SQLSMITH_EXTENSION TRUE)
+if(BUILD_H3)
+  set(BUILD_H3_EXTENSION TRUE)
 endif()
 
 if(TREAT_WARNINGS_AS_ERRORS)
@@ -546,6 +547,11 @@ function(add_extension_definitions)
     include_directories(${PROJECT_SOURCE_DIR}/extension/sqlsmith/include)
     add_definitions(-DBUILD_SQLSMITH_EXTENSION=${BUILD_SQLSMITH_EXTENSION})
   endif()
+
+  if(${BUILD_H3_EXTENSION})
+    include_directories(${PROJECT_SOURCE_DIR}/extension/h3/include)
+    add_definitions(-DBUILD_H3_EXTENSION=${BUILD_H3_EXTENSION})
+  endif()
 endfunction()
 
 function(add_extension_dependencies LIBRARY)
@@ -591,6 +597,10 @@ function(add_extension_dependencies LIBRARY)
 
   if(${BUILD_SQLSMITH_EXTENSION})
     add_dependencies(${LIBRARY} sqlsmith_extension)
+  endif()
+
+  if(${BUILD_H3_EXTENSION})
+    add_dependencies(${LIBRARY} h3_extension)
   endif()
 
 endfunction()
@@ -643,6 +653,10 @@ function(link_extension_libraries LIBRARY)
 
   if(${BUILD_SQLSMITH_EXTENSION})
     target_link_libraries(${LIBRARY} sqlsmith_extension)
+  endif()
+
+  if(${BUILD_H3_EXTENSION})
+    target_link_libraries(${LIBRARY} h3_extension)
   endif()
 endfunction()
 

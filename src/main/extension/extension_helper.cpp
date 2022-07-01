@@ -73,6 +73,10 @@
 #include "sqlsmith-extension.hpp"
 #endif
 
+#if defined(BUILD_H3_EXTENSION) && !defined(DISABLE_BUILTIN_EXTENSIONS)
+#include "h3-extension.hpp"
+#endif
+
 namespace duckdb {
 
 //===--------------------------------------------------------------------===//
@@ -107,8 +111,8 @@ DefaultExtension ExtensionHelper::GetDefaultExtension(idx_t index) {
 // Load Statically Compiled Extension
 //===--------------------------------------------------------------------===//
 void ExtensionHelper::LoadAllExtensions(DuckDB &db) {
-	unordered_set<string> extensions {"parquet",   "icu",        "tpch", "tpcds", "fts",     "httpfs",
-	                                  "substrait", "visualizer", "json", "excel", "sqlsmith"};
+	unordered_set<string> extensions {"parquet",   "icu",        "tpch", "tpcds", "fts",      "httpfs",
+	                                  "substrait", "visualizer", "json", "excel", "sqlsmith", "h3"};
 	for (auto &ext : extensions) {
 		LoadExtensionInternal(db, ext, true);
 	}
@@ -210,7 +214,14 @@ ExtensionLoadResult ExtensionHelper::LoadExtensionInternal(DuckDB &db, const std
 #if defined(BUILD_SQLSMITH_EXTENSION) && !defined(DISABLE_BUILTIN_EXTENSIONS)
 		db.LoadExtension<SQLSmithExtension>();
 #else
-		// excel extension required but not build: skip this test
+		// sqlsmith extension required but not build: skip this test
+		return ExtensionLoadResult::NOT_LOADED;
+#endif
+	} else if (extension == "h3") {
+#if defined(BUILD_H3_EXTENSION) && !defined(DISABLE_BUILTIN_EXTENSIONS)
+		db.LoadExtension<H3Extension>();
+#else
+		// h3 extension required but not build: skip this test
 		return ExtensionLoadResult::NOT_LOADED;
 #endif
 	} else {
