@@ -8,7 +8,8 @@ add_subdirectory(h3_functions)
 set(H3_EXTENSION_FILES
     h3-extension.cpp
     h3_common.cpp
-    h3_functions/h3_valid.cpp)
+    h3_functions/h3_valid.cpp
+    h3_functions/h3_cell_to_parent.cpp)
 
 add_library(h3_extension STATIC ${H3_EXTENSION_FILES})
 

@@ -17,4 +17,6 @@
 
 namespace duckdb {
 
+void ThrowH3Error(H3Error err);
+
 } // namespace duckdb

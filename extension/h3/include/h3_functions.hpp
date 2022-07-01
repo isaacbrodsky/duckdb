@@ -18,12 +18,14 @@ public:
 		vector<CreateScalarFunctionInfo> functions;
 
 		functions.push_back(GetValidFunction());
+		functions.push_back(GetCellToParentFunction());
 
 		return functions;
 	}
 
 private:
 	static CreateScalarFunctionInfo GetValidFunction();
+	static CreateScalarFunctionInfo GetCellToParentFunction();
 
 	static void AddAliases(vector<string> names, CreateScalarFunctionInfo fun,
 	                       vector<CreateScalarFunctionInfo> &functions) {
