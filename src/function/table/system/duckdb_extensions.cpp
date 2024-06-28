@@ -139,6 +139,7 @@ unique_ptr<GlobalTableFunctionState> DuckDBExtensionsInit(ClientContext &context
 
 	// Finally, we check the list of currently loaded extensions
 	auto &loaded_extensions = db.LoadedExtensionsData();
+	auto &loaded_extension_descriptions = db.LoadedExtensionsDescriptions();
 	for (auto &e : loaded_extensions) {
 		auto &ext_name = e.first;
 		auto &ext_info = e.second;
@@ -150,6 +151,11 @@ unique_ptr<GlobalTableFunctionState> DuckDBExtensionsInit(ClientContext &context
 			info.extension_version = ext_info.version;
 			info.installed = ext_info.mode == ExtensionInstallMode::STATICALLY_LINKED;
 			info.install_mode = ext_info.mode;
+
+			auto description_entry = loaded_extension_descriptions.find(ext_name);
+			if (description_entry != loaded_extension_descriptions.end()) {
+				info.description = description_entry->second;
+			}
 		} else {
 			entry->second.loaded = true;
 			entry->second.extension_version = ext_info.version;

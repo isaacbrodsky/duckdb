@@ -407,6 +407,10 @@ const unordered_map<std::string, ExtensionInstallInfo> &DatabaseInstance::Loaded
 	return loaded_extensions_data;
 }
 
+const unordered_map<std::string, std::string> &DatabaseInstance::LoadedExtensionsDescriptions() {
+	return loaded_extensions_descriptions;
+}
+
 idx_t DuckDB::NumberOfThreads() {
 	return instance->NumberOfThreads();
 }
@@ -429,6 +433,11 @@ void DatabaseInstance::SetExtensionLoaded(const string &name, ExtensionInstallIn
 	for (auto &callback : callbacks) {
 		callback->OnExtensionLoaded(*this, name);
 	}
+}
+
+void DatabaseInstance::SetExtensionDescription(const string &name, const string &description) {
+	auto extension_name = ExtensionHelper::GetExtensionName(name);
+	loaded_extensions_descriptions.insert({extension_name, description});
 }
 
 SettingLookupResult DatabaseInstance::TryGetCurrentSetting(const std::string &key, Value &result) const {

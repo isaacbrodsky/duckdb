@@ -50,6 +50,7 @@ public:
 	DUCKDB_API ConnectionManager &GetConnectionManager();
 	DUCKDB_API ValidChecker &GetValidChecker();
 	DUCKDB_API void SetExtensionLoaded(const string &extension_name, ExtensionInstallInfo &install_info);
+	DUCKDB_API void SetExtensionDescription(const string &name, const string &description);
 
 	idx_t NumberOfThreads();
 
@@ -58,6 +59,7 @@ public:
 
 	DUCKDB_API const unordered_set<string> &LoadedExtensions();
 	DUCKDB_API const unordered_map<string, ExtensionInstallInfo> &LoadedExtensionsData();
+	DUCKDB_API const unordered_map<std::string, std::string> &LoadedExtensionsDescriptions();
 	DUCKDB_API bool ExtensionIsLoaded(const string &name);
 
 	DUCKDB_API SettingLookupResult TryGetCurrentSetting(const string &key, Value &result) const;
@@ -79,6 +81,7 @@ private:
 	unique_ptr<ConnectionManager> connection_manager;
 	unordered_set<string> loaded_extensions;
 	unordered_map<string, ExtensionInstallInfo> loaded_extensions_data;
+	unordered_map<string, string> loaded_extensions_descriptions;
 	ValidChecker db_validity;
 	unique_ptr<DatabaseFileSystem> db_file_system;
 };
@@ -119,6 +122,7 @@ public:
 	void LoadExtension() {
 		T extension;
 		extension.Load(*this);
+		instance->SetExtensionDescription(extension.Name(), extension.Description());
 	}
 
 	DUCKDB_API FileSystem &GetFileSystem();
