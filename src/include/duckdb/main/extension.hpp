@@ -24,9 +24,6 @@ public:
 	DUCKDB_API virtual std::string Version() const {
 		return "";
 	}
-	DUCKDB_API virtual std::string Description() {
-		return "";
-	}
 };
 
 //! The parsed extension metadata footer

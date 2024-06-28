@@ -122,7 +122,6 @@ public:
 	void LoadExtension() {
 		T extension;
 		extension.Load(*this);
-		instance->SetExtensionDescription(extension.Name(), extension.Description());
 	}
 
 	DUCKDB_API FileSystem &GetFileSystem();
